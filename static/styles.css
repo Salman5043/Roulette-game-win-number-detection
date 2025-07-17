@@ -1,0 +1,48 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.video-feed {
+    background-color: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+}
+
+.table-custom {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-custom th, .table-custom td {
+    padding: 12px;
+    text-align: center;
+}
+
+.table-custom th {
+    background-color: #007bff;
+    color: white;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f1f1f1;
+}

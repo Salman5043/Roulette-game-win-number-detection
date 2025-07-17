@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Number Detection</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Roulette Winning Number Detection</h1>
+
+        <!-- Video Feed Section -->
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="video-feed">
+                    <img id="video-feed" src="" class="img-fluid" alt="Live Video Feed" style="display: none;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="row mt-4">
+            <div class="col-md-8 mx-auto text-center">
+                <button id="start-btn" class="btn btn-custom me-2">Start Detection</button>
+                <button id="stop-btn" class="btn btn-custom">Stop Detection</button>
+            </div>
+        </div>
+
+        <!-- Detected Numbers Table -->
+        <div class="row mt-5">
+            <div class="col-md-8 mx-auto">
+                <h3 class="text-center mb-3">Last 10 Winning Numbers</h3>
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detected-numbers">
+                        <!-- Rows will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function () {
+            const videoFeed = $('#video-feed');
+
+            // Start Detection
+            $('#start-btn').click(function () {
+                $.post('/start', function (response) {
+                    alert(response.status);
+                    // Show video feed
+                    videoFeed.attr('src', "{{ url_for('video_feed') }}");
+                    videoFeed.show();
+                    fetchDetectedNumbers(); // Fetch detected numbers on start
+                });
+            });
+
+            // Stop Detection
+            $('#stop-btn').click(function () {
+                $.post('/stop', function (response) {
+                    alert(response.status);
+                    // Hide video feed
+                    videoFeed.hide();
+                    videoFeed.attr('src', ''); // Stop the video stream
+                });
+            });
+
+            // Fetch Detected Numbers
+            function fetchDetectedNumbers() {
+                $.get('/detected_numbers', function (data) {
+                    $('#detected-numbers').empty(); // Clear existing rows
+                    // Show only the last 10 detected numbers (latest on top)
+                    data.slice(-10).reverse().forEach(function (item) {
+                        $('#detected-numbers').append(
+                            `<tr>
+                                <td>${item.text}</td>
+                                <td>${item.timestamp}</td>
+                            </tr>`
+                        );
+                    });
+                });
+            }
+
+            // Refresh detected numbers every 5 seconds
+            setInterval(fetchDetectedNumbers, 5000);
+        });
+    </script>
+</body>
+</html>
